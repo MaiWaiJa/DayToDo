@@ -1,10 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState} from 'react';
-import { Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Pressable} from 'react-native';
-import { Input, View, ScrollView, ZStack, Box } from 'native-base';
+import { Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Pressable, Button} from 'react-native';
+import { Input, View, ScrollView, ZStack, Box ,Platform} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import ScrollPicker from "react-native-wheel-scrollview-picker";
+
+import { getTimeHours, getTimeMins, getIndex } from '../components/ScrollTimePicker';
+
 
 // import { ScrollTimePicker } from '../components';
 
@@ -15,6 +20,9 @@ const CreateScreen = ({ route }) => {
   const [modalBeforePicTime,setmodalBeforePicTime] = useState(false);
   const [modalPicTime,setmodalPicTime] = useState(false);
   const [modalPicTime2,setmodalPicTime2] = useState(false);
+
+  const [selectedTimeHours, setSelectedTimeHours] = useState('00')
+  const [selectedTimeMinute, setSelectedTimeMinute] = useState('00') 
 
   return (
     <>
@@ -69,24 +77,51 @@ const CreateScreen = ({ route }) => {
         <View w={'80%'} style={[styles.textStartAcitity, {marginTop: 24}]}>
           <Text style={{fontSize: 16,fontFamily:'Sarabun-Medium'}}>เมื่อไหร่</Text>
           <TouchableOpacity onPress = {() => {setmodalBeforePicTime(true)}} >
-            <Text style={{fontSize: 16,fontFamily:'Sarabun-Medium'}}  >มากกว่า</Text>
+            <Text style={{fontSize: 16,fontFamily:'Sarabun-Medium'}}>มากกว่า</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={{
-          marginTop: 20,
-          fontSize: 16,
-          fontFamily:'Sarabun-Regular',
-          textAlign: 'center'
-        }}>
-          ชั่วโมง : นาที
-        </Text>
-
-        <View style={{
-          alignSelf: 'center'
-        }}>
-          {/* <ScrollTimePicker/> */}
+        <View style={{alignItems: 'center'}}>
+          <Text>Select Time</Text>
+          <View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{height: 200}}>
+              <ScrollPicker
+                dataSource={getTimeHours()}
+                selectedIndex={getIndex(selectedTimeHours)}
+                renderItem={(data, index, isSelected) => (
+                  <Text style={isSelected && { color: 'red' }}>{data}</Text>
+                )}
+                onValueChange={(data, selectedIndex) => setSelectedTimeHours(data)}
+                wrapperHeight={180}
+                wrapperWidth={150}
+                wrapperColor='#FFFFFF'
+                itemHeight={60}
+                highlightColor='#d8d8d8'
+                highlightBorderWidth={2}
+              />
+            </View>
+            <Text style={{position: 'absolute', paddingBottom: 20,fontSize: 20, fontWeight: 'bold'}}>:</Text>
+            <View style={{height: 200, marginLeft: 30}}>
+              <ScrollPicker
+                dataSource={getTimeMins()}
+                selectedIndex={getIndex(selectedTimeMinute)}
+                renderItem={(data, index, isSelected) => (
+                  <Text style={isSelected && { color: 'red' }}>{data}</Text>
+                )}
+                onValueChange={(data, selectedIndex) => setSelectedTimeMinute(data)}
+                wrapperHeight={180}
+                wrapperWidth={150}
+                wrapperColor='#FFFFFF'
+                itemHeight={60}
+                highlightColor='#d8d8d8'
+                highlightBorderWidth={2}
+              />
+            </View>
+          </View>
         </View>
+
+        <Button title="Show Time" onPress={() => console.log(`${selectedTimeHours}:${selectedTimeMinute}`)}/>
+        
 
         <View w={'80%'} style={[styles.textStartAcitity, {marginTop: 35}]}>
           <Text style={{fontSize: 16,fontFamily:'Sarabun-Medium'}}>นานเเค่ไหน?</Text>
@@ -299,6 +334,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 20,
   },
+
+
 });
 
 export default CreateScreen;

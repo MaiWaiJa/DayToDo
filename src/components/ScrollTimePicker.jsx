@@ -1,47 +1,45 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, Text, View, DatePickerAndroid } from 'react-native';
 
-import TimePicker from '../components/ScrollTimePicker/index';
-import { useMemo } from 'react';
+export function getTimeHours() {
+  const data = [];
+  for (let i = 0; i < 24; i++) {
+    const hour = i < 10 ? `0${i}` : `${i}`;
+    data.push(`${hour}`);
+    // for (let j = 0; j < 60; j += 15) {
+    //   const minute = j < 10 ? `0${j}` : `${j}`;
+  }
+  return data;
+};
 
-const MILLISECONDS_PER_MINUTE = 60 * 1000;
-const MILLISECONDS_PER_HOUR = 60 * 60 * 1000;
-const MILLISECONDS_PER_DAY = 24 * MILLISECONDS_PER_HOUR;
+export function getTimeMins() {
+  const data = [];
+  for (let j = 0; j < 60; j += 1) {
+    const minute = j < 10 ? `0${j}` : `${j}`;
+    data.push(`${minute}`);
+  }
+  return data;
+};
 
-export default function ScrollTimePicker() {
-  const [timeValue, setTimeValue] = useState(Date.now() % MILLISECONDS_PER_DAY);
-  const [hour, min] = useMemo(() => {
-    return [
-      Math.floor(timeValue / MILLISECONDS_PER_HOUR),
-      Math.floor((timeValue % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE),
-      Math.floor((timeValue % MILLISECONDS_PER_MINUTE) / 1000),
-    ];
-  }, [timeValue]);
-  return (
-    <View style={styles.container}>
-      <TimePicker
-        value={timeValue}
-        wheelProps={{
-          wheelHeight: 200,
-          itemHeight: 28,
-        }}
-        textStyle={{fontSize: 20, fontFamily: 'Sarabun-SemiBold'}}
-        textCenterStyle={{fontSize: 25, fontFamily: 'Sarabun-Medium', paddingTop: 6}}
-        onChange={(newValue) => setTimeValue(newValue)}
-      />
-      {/* <Text style={styles.timeValue}>{`${hour < 10 ? '0' : ''}${hour}:${
-        min < 10 ? '0' : ''
-      }${min}`}</Text> */}
-    </View>
-  );
+const getTimeData = () => {
+  const data = [];
+  data.push(`${getTimeHours.hour}:${getTimeMins.minute}`)
+  return data;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // timeValue: {
-  //   marginVertical: 20,
-  // },
-});
+  // export function getTimeData() {
+  //   const data = [];
+  //   for (let i = 0; i < 24; i++) {
+  //     const hour = i < 10 ? `0${i}` : `${i}`;
+  //     for (let j = 0; j < 60; j += 15) {
+  //       const minute = j < 10 ? `0${j}` : `${j}`;
+  //       data.push(`${hour}:${minute} ${i < 12 ? 'AM' : 'PM'}`);
+  //     }
+  //   }
+  //   return data;
+  // };
+
+  export function getIndex(time) {
+    const data = getTimeData();
+    return data.findIndex((item) => item === time);
+  };
