@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import {useState} from 'react'
+import { Modal } from 'react-native';
 import {
   Text,
   Image,
@@ -7,8 +8,12 @@ import {
   View,
   Button,
   VStack,
+  Pressable,
 } from 'native-base'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import {
   Background,
@@ -21,6 +26,8 @@ import { useData, useTheme } from '../hooks'
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
+import ModalEdit from '../components/ModalEdit';
+
 const HomeScreen = () => {
   const {icons} = useTheme()
   const {newDate, expenses} = useData()
@@ -29,6 +36,7 @@ const HomeScreen = () => {
   // console.log("count")
   const [showCalendar, setShowCalendar] = useState(false)
   const [showSelectIcon, setShowSelectIcon] = useState(false)
+  const [modalEdit, setModalEdit] = useState(false);
 
   function onShowCalenderChange() {
     setShowCalendar(false)
@@ -100,8 +108,15 @@ const HomeScreen = () => {
             </View>
           ))}
         </VStack>
+          
+        <Button onPress = {() => {setModalEdit(true)}}> 
+          <View style={{alignSelf: 'center',marginRight: 100,flexDirection: 'row'}}>
+            <MaterialIcons name="edit" size={24} color="#ff7b00"/>
+            <Text>edit</Text>
+          </View>
+        </Button>  
       </Box>
-
+      
       {/*  Bottom Tabs */}
       <Box
         elevation={30}
@@ -204,6 +219,9 @@ const HomeScreen = () => {
       {showCalendar && <Calendar showCalendar={showCalendar}  onShowCalenderChange={onShowCalenderChange} />}
       {/* Modal Create Activity Select Icon */}
       {showSelectIcon && <CreateActivitySelectIcon showSelectIcon={showSelectIcon} onShowSelectIcon={onShowCreateAcititySelectIcon} />}
+
+      {modalEdit && <ModalEdit modalEdit={modalEdit} setModalEdit={setModalEdit}/>}
+
     </Background>
   )
 }
